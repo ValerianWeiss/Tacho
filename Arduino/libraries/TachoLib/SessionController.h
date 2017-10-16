@@ -15,6 +15,7 @@ class SessionController{
   public:
     static Session *session;
     
+    static void readFromESP();    
   	void listenToSignal();
   	void stopSession();
   	void startSession(sessionType type);

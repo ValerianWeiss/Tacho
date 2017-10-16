@@ -12,6 +12,7 @@ const char *password = "test123";
 ESP8266WebServer server(80);
 int activeFlag = 0;
 
+
 /* Just a little test message.  Go to http://192.168.4.1 in a web browser
  * connected to this access point to see it.
  */
@@ -20,14 +21,21 @@ void handleRoot() {
 }
 
 void sendJson(){  
-  String recievedStr = Serial.readString();
-  if(recievedStr != ""){    
-    server.send(200, "application/json", recievedStr);
+  String recievedStr = "";
+  while(recievedStr.length() == 0)
+  {
+    recievedStr = Serial.readString();
+  }
+  server.send(200, "application/json", recievedStr);
   }  
 }
 
-void handelStart(){
+void handleStartBikesession(){
   activeFlag = SESSION_ACTIVE;
+  int messageArray[2];
+  messageArray[0] = activeFlag;
+  messageArray[1] = SessionType.BIKE_SESSION;
+  Serial.write(messageArray,2);
 }
 
 void handleStop(){
@@ -47,7 +55,7 @@ void setup() {
 	Serial.println(myIP);
 	server.on("/", handleRoot);
   server.on("/stop", handleStop);  
-  server.on("/start", handleStop);
+  server.on("/startBikeSession", handleStartBikesession);
 	server.begin();
 	Serial.println("HTTP server started");
 }

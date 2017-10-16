@@ -41,3 +41,19 @@ void SessionController::startSession(sessionType type){
 void SessionController::stopSession(){
 	this->session->active = false;
 }
+
+void SessionController::readFromESP(){
+	if(Serial.available() > 0)		
+		switch(Serial.read()){
+			case: SESSION_ACTIVE:
+					sessionType type; 
+					while(Serial.available() == 0){
+						this.startSession(type);
+					}
+					break;
+			case: SESSION_NOT_ACTIVE: //TODO;
+				break;
+			default: //TODO
+				break;
+		}
+}
