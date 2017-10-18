@@ -15,12 +15,10 @@ class SessionController{
   public:
     static Session *session;
     
-    static void readFromESP();    
-  	void listenToSignal();
+    static void listenToEsp();  
   	void stopSession();
   	void startSession(sessionType type);
     static SessionController* getInstance();
 };
-
 
 #endif

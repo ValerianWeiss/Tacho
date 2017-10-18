@@ -16,10 +16,6 @@ SessionController * SessionController::getInstance(){
   return sessionController;
 }
 
-void SessionController::listenToSignal(){
-	//Check if start, stop or pause session
-}
-
 //This func should be called by the listenToSignal function
 //TODO Add args [] for differet Session types (e.g wheel hight for BikeSession)
 void SessionController::startSession(sessionType type){
@@ -42,18 +38,10 @@ void SessionController::stopSession(){
 	this->session->active = false;
 }
 
-void SessionController::readFromESP(){
-	if(Serial.available() > 0)		
-		switch(Serial.read()){
-			case: SESSION_ACTIVE:
-					sessionType type; 
-					while(Serial.available() == 0){
-						this.startSession(type);
-					}
-					break;
-			case: SESSION_NOT_ACTIVE: //TODO;
-				break;
-			default: //TODO
-				break;
-		}
+void SessionController::listenToEsp(){
+	String message = "";
+	while(Serial.available() > 0){
+		message += (String)Serial.read();
+	}
+	Serial.println("Recieved: " + message); 			
 }

@@ -9,7 +9,7 @@
 #define SESSION_NOT_ACTIVE 0
 #define ARDUINO_STARTS_SENDING "startSending"
 
-typedef enum sessionType{
+enum sessionType{
   SESSION,
   BIKE_SESSION,
 };

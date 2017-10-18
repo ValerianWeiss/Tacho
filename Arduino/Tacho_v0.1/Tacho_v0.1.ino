@@ -4,8 +4,6 @@
 #include <SessionController.h>
 #include <Timer.h>
 
-//#include <ESP8266WiFi.h>
-
 SessionController* sessionController;
 
 void setup(){
@@ -16,7 +14,7 @@ void setup(){
 }
 
 void loop(){
-  
+  sessionController->listenToEsp();
   if(sessionController->session->getId() == BIKE_SESSION){
     sessionController->session->getTimer().checkForRollover();
     BikeSession *session = (BikeSession*)sessionController->session;
