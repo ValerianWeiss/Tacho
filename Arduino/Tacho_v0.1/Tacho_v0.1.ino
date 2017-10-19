@@ -15,15 +15,20 @@ void setup(){
 
 void loop(){
   sessionController->listenToEsp();
-  if(sessionController->session->getId() == BIKE_SESSION){
-    sessionController->session->getTimer().checkForRollover();
-    BikeSession *session = (BikeSession*)sessionController->session;
-    if(session->active/* && if read(LOW)*/){
-      session->calc();      
-      //Test output
-      session->printToMonitor();
+
+  if(sessionController->getSession()->getSessionState() == true){  
+    switch(sessionController->getSession()->getId()){
+      case BIKE_SESSION:          
+          sessionController->getSession()->getTimer().checkForRollover();
+          sessionController->getSession()->calc();
+          sessionController->getSession()->sendDataJson();
+          break;
+      
+      default: //TODO implement a default case
+          break;
     }
   }
+ 
   //Random spintimintervall
   int i = random(20,1000);
   Serial.print((double)i/1000,4);

@@ -19,7 +19,7 @@ SessionController * SessionController::getInstance(){
 //This func should be called by the listenToSignal function
 //TODO Add args [] for differet Session types (e.g wheel hight for BikeSession)
 void SessionController::startSession(sessionType type){
-	if(!this->session->active){			
+	if(!this->session->getSessionState()){			
 		switch(type){
 			case SESSION:
 				break;
@@ -35,13 +35,17 @@ void SessionController::startSession(sessionType type){
 }	
 
 void SessionController::stopSession(){
-	this->session->active = false;
+	this->session->setSessionNotActive();
 }
 
 void SessionController::listenToEsp(){
 	String message = "";
 	while(Serial.available() > 0){
-		message += (String)Serial.read();
+		message += Serial.read();
 	}
 	Serial.println("Recieved: " + message); 			
+}
+
+Session* SessionController::getSession(){
+	return this->session;
 }

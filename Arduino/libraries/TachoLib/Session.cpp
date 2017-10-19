@@ -5,7 +5,7 @@ bool Session::active = false;
 Session::Session(unsigned int Id, unsigned long startTime) : sessionId (Id), startTime(startTime), duration(0.0){
 }
 
-bool Session::getSessionActive(){
+bool Session::getSessionState(){
 	return this->active;
 }
 

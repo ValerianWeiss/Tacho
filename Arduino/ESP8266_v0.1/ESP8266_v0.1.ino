@@ -39,6 +39,7 @@ void handleStartBikesession(){
 
 void handleStop(){
   activeFlag = SESSION_NOT_ACTIVE;
+  //Send msg to arduino -> active flag false .> destructor call
 }
 
 void setup() {

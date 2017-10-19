@@ -30,7 +30,7 @@ class BikeSession : public Session{
     float getAverageSpeed(); 
     void calc(); 
     void printToMonitor();
-    
+    void sendDataJson();    
     void startNewSession();
     Timer getTimer();
 	  String print();

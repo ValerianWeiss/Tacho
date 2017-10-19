@@ -41,9 +41,9 @@ void BikeSession::calc(){
 	double timeForOneSpin = this->timer.calcDiff();
 
 	//For Testing
-	Serial.print("timeForOneSpin: ");
-	Serial.print(timeForOneSpin);
-	Serial.print("\n");
+	//Serial.print("timeForOneSpin: ");
+	//Serial.print(timeForOneSpin);
+	//Serial.print("\n");
 	
 	
   Session::addDuration(timeForOneSpin);
@@ -90,6 +90,13 @@ float BikeSession::getAverageSpeed(){
   return averageSpeed;  
 }
 
+void BikeSession::sendDataJson(){
+  String json = "{\"sessionType\":\"" + String(getId()) + "\", \"status\":\"" + getSessionState() + "\", \"distance\":\"" + getDistance() + "\"," + 
+                        "\"currentSpeed\":\"" + getCurrentSpeed() + "\", \"avgSpeed\":\"" + getAverageSpeed() + "\"," +
+                        "\"topSpeed\":\"" + getTopSpeed() + "\", \"sessionDuration\":\"" + getDuration() + "\"}";
+  Serial.write(json.c_str());
+}
+
 void BikeSession::printToMonitor(){
     Serial.print("Duration: ");
     Serial.print(getDuration(),4);
@@ -107,6 +114,7 @@ void BikeSession::printToMonitor(){
     Serial.print(getAverageSpeed(),4);
     Serial.print("\n\n");
 }
+
 
 
 

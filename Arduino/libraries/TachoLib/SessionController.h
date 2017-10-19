@@ -11,10 +11,10 @@ class SessionController{
     static SessionController *sessionController;
     
     SessionController();
-    
+  protected:
+     static Session *session;
   public:
-    static Session *session;
-    
+    Session* getSession();
     static void listenToEsp();  
   	void stopSession();
   	void startSession(sessionType type);

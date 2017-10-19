@@ -11,15 +11,16 @@ class Session{
 		unsigned long startTime;
 		unsigned long endTime;	
     Timer timer;	
+		static bool active;
 	
 		virtual void sendDatagram() = 0;		
 		Session(unsigned int Id, unsigned long startTime);
 	
 	public:
-    double getDuration();
-		static bool active;
+    double getDuration();	
 		virtual void calc() = 0;
-    bool getSessionActive();
+		virtual void sendDataJson() = 0;
+    bool getSessionState();
     void setSessionActive();
     void setSessionNotActive();
     int getId();
