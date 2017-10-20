@@ -10,7 +10,6 @@ void setup(){
 	 Serial.begin(BAUD_RATE);
 	 //Testing
 	 sessionController = SessionController::getInstance();
-	 sessionController->startSession(BIKE_SESSION);
 }
 
 void loop(){

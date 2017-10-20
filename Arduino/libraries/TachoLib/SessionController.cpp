@@ -19,12 +19,13 @@ SessionController * SessionController::getInstance(){
 
 //This func should be called by the listenToSignal function
 //TODO Add args [] for differet Session types (e.g wheel hight for BikeSession)
-void SessionController::startSession(sessionType type){
-	if(!this->session->getSessionState()){			
+void SessionController::startSession(sessionType type, JsonArray& params){
+	if(!this->session->getSessionState()){
+		String* params = getParams();			
 		switch(type){
 			case SESSION:
 				break;
-			case BIKE_SESSION: 	session = BikeSession::getInstance(0.6); //added 0.6 for testing
+			case BIKE_SESSION: 	session = BikeSession::getInstance(params[0].toFloat());
 								session->setSessionActive();
 				break;
 			default: Serial.print("ERROR: Not a valid Sessiontype");
@@ -39,24 +40,49 @@ void SessionController::stopSession(){
 	this->session->setSessionNotActive();
 }
 
+void SessionController::pauseSession(){
+
+}
+
 void SessionController::listenToEsp(){
 	String message = "";
 	while(Serial.available() > 0){
 		message += Serial.read();
-	}
-	Serial.println("Recieved: " + message); 			
+	}			
 }
 
 Session* SessionController::getSession(){
 	return this->session;
 }
 
-void SessionController::parseJsonMessage(String msg){
-	sessionType type;
-	sessionCommand command;
+void SessionController::parseJsonMessage(String jsonMsg){
+	
+	StaticJsonBuffer<200> jsonBuffer;
+	JsonObject& root = jsonBuffer.parseObject(jsonMsg);
 
-	if(msg.contains("sessionType") && msg.contains("command")){
-		
-	}else
+	if(!root.success()){
+		return;
+	}
 
+	sessionType type = root["sessionType"];
+	sessionCommand command = root["sessionCommand"];
+	JsonArray& params = root["params"];
+
+	switch(command){
+		case START_COMMAND: startSession(type, params); break;
+		case PAUSE_COMMAND: pauseSession(); break;
+		case STOP_COMMAND: stopSession(); break;
+		default:break;
+	}
+
+}
+
+String* SessionController::getParams(JsonArray& params){
+	String* paramArray;
+	JsonObject& data =  params["data"];
+	int index = 0;
+	for (auto dataobj : data){
+		paramArray[index] = dataobj.value.asString();
+	}
+	return paramArray;
 }

@@ -9,9 +9,9 @@
 #define SESSION_NOT_ACTIVE 0
 
 enum sessionCommand{
-  START,
-  STOP,
-  PAUSE
+  START_COMMAND,
+  STOP_COMMAND,
+  PAUSE_COMMAND
 };
 
 enum sessionType{

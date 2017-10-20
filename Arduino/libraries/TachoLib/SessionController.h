@@ -4,20 +4,24 @@
 #include "Session.h"
 #include "BikeSession.h"
 #include "Constants.h"
-
+#include <ArduinoJson.h>
 
 class SessionController{
 	private:  	
     static SessionController *sessionController;
     
     SessionController();
+    String* getParams(JsonArray& params);
+    void parseJsonMessage(String jsonMsg);
+    String* getParams();
   protected:
      static Session *session;
   public:
     Session* getSession();
     static void listenToEsp();  
   	void stopSession();
-  	void startSession(sessionType type);
+  	void startSession(sessionType type, JsonArray& params);
+    void pauseSession();
     static SessionController* getInstance();
 };
 
