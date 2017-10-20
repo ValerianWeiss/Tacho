@@ -7,7 +7,12 @@
 
 #define SESSION_ACTIVE 1
 #define SESSION_NOT_ACTIVE 0
-#define ARDUINO_STARTS_SENDING "startSending"
+
+enum sessionCommand{
+  START,
+  STOP,
+  PAUSE
+};
 
 enum sessionType{
   SESSION,

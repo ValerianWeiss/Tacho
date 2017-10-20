@@ -2,6 +2,7 @@
 #include "BikeSession.h"
 #include "Session.h"
 #include "Constants.h"
+#include <ArduinoJson.h>
 
 SessionController* SessionController::sessionController = NULL;
 Session* SessionController::session = NULL;
@@ -48,4 +49,14 @@ void SessionController::listenToEsp(){
 
 Session* SessionController::getSession(){
 	return this->session;
+}
+
+void SessionController::parseJsonMessage(String msg){
+	sessionType type;
+	sessionCommand command;
+
+	if(msg.contains("sessionType") && msg.contains("command")){
+		
+	}else
+
 }

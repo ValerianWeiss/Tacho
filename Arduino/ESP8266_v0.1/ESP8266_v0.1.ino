@@ -22,7 +22,7 @@ void handleRoot() {
 
 void sendJson(){  
   String recievedStr = "";
-  while(recievedStr.length() == 0)
+  while(Serial.available() > 0  && recievedStr.length() == 0)
   {
     recievedStr = Serial.readString();
   }
@@ -31,10 +31,11 @@ void sendJson(){
 
 void handleStartBikesession(){
   if(server.hasArg("plain") != true){
-    server.send(200, "application/json", "{\"status\":\"couldNotHandle\"}");
+    server.send(200, "application/json", "{\"status\":\"-1\"}");
     return;
   }
   Serial.write(server.arg("plain").c_str());
+  server.sendJson();
 }
 
 void handleStop(){
@@ -62,7 +63,7 @@ void setup() {
 
 void loop() {
   server.handleClient();
-  if(activeFlag == SESSION_ACTIVE && Serial.readString().equals(ARDUINO_STARTS_SENDING)){
+  if(activeFlag == SESSION_ACTIVE){
     sendJson();
   }
 }
