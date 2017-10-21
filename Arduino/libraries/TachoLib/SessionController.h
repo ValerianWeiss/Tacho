@@ -13,14 +13,16 @@ class SessionController{
     SessionController();
     String* getParams(JsonArray& params);
     void parseJsonMessage(String jsonMsg);
-    String* getParams();
+    String* getParams(JsonObject& params);
+ 
   protected:
      static Session *session;
+ 
   public:
     Session* getSession();
-    static void listenToEsp();  
+    void listenToEsp();  
   	void stopSession();
-  	void startSession(sessionType type, JsonArray& params);
+  	void startSession(sessionType type, JsonObject& params);
     void pauseSession();
     static SessionController* getInstance();
 };

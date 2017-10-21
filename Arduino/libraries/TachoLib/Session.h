@@ -12,8 +12,7 @@ class Session{
 		unsigned long endTime;	
     Timer timer;	
 		static bool active;
-	
-		virtual void sendDatagram() = 0;		
+		
 		Session(unsigned int Id, unsigned long startTime);
 	
 	public:

@@ -30,8 +30,8 @@ void loop(){
  
   //Random spintimintervall
   int i = random(20,1000);
-  Serial.print((double)i/1000,4);
-  Serial.print("\n");
+  //Serial.print((double)i/1000,4);
+  //Serial.print("\n");
   delay(i);
 }
 	

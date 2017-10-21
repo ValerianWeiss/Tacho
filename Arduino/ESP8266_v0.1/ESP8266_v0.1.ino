@@ -22,7 +22,7 @@ void handleRoot() {
 
 void sendJson(){  
   String recievedStr = "";
-  while(Serial.available() > 0  && recievedStr.length() == 0)
+  while(Serial.available() > 0  && !recievedStr.endsWith("\n"))
   {
     recievedStr = Serial.readString();
   }
@@ -35,7 +35,10 @@ void handleStartBikesession(){
     return;
   }
   Serial.write(server.arg("plain").c_str());
-  server.sendJson();
+  Serial.write("\n");
+  //the response which is getting produced and send by to arduino
+  sendJson();
+  activeFlag = SESSION_ACTIVE;
 }
 
 void handleStop(){
