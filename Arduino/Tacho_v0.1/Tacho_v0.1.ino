@@ -8,7 +8,6 @@ SessionController* sessionController;
 
 void setup(){
 	 Serial.begin(BAUD_RATE);
-	 //Testing
 	 sessionController = SessionController::getInstance();
 }
 

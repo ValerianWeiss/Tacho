@@ -93,8 +93,8 @@ float BikeSession::getAverageSpeed(){
 void BikeSession::sendDataJson(){
   String json = "{\"sessionType\":\"" + String(getId()) + "\", \"status\":\"" + getSessionState() + "\", \"distance\":\"" + getDistance() + "\"," + 
                         "\"currentSpeed\":\"" + getCurrentSpeed() + "\", \"avgSpeed\":\"" + getAverageSpeed() + "\"," +
-                        "\"topSpeed\":\"" + getTopSpeed() + "\", \"sessionDuration\":\"" + getDuration() + "\"}\n";
-  Serial.write(json.c_str());
+                        "\"topSpeed\":\"" + getTopSpeed() + "\", \"sessionDuration\":\"" + getDuration() + "\"wheelHight\":\""+ getWheelHight() + "\"}\n";
+  Serial.print(json);
 }
 
 
