@@ -19,22 +19,22 @@ SessionController * SessionController::getInstance(){
 
 //This func should be called by the listenToSignal function
 //TODO Add args [] for differet Session types (e.g wheel hight for BikeSession)
-void SessionController::startSession(sessionType type, JsonObject& params){
+void SessionController::startSession(sessionType type, JsonArray& params){
 	if(!this->session->getSessionState()){
-		String* paramArray = getParams(params);
-
+		float paramArray [params.size()];
+		getParams(paramArray, params);
 		switch(type){
 			case SESSION:
 				break;
-			case BIKE_SESSION:	session = BikeSession::getInstance(paramArray[0].toFloat());
+			case BIKE_SESSION:	session = BikeSession::getInstance(paramArray[0]);
 								session->setSessionActive();
 								session->sendDataJson();
 				break;
-			default: Serial.print("ERROR: Not a valid Sessiontype");
+			default: Serial.print("{\"status\":\"-5\"}\n");
 				break;
 		}
 	}else{
-		Serial.print("ERROR: There is already an active Session");
+		Serial.print("{\"status\":\"-6\"}\n");
 	}
 }	
 
@@ -48,11 +48,19 @@ void SessionController::pauseSession(){
 }
 
 void SessionController::listenToEsp(){
+	//To Debug you can use this example message -> outcome should be a responese
+	//string with the current information about the session
+	//String message = "{\"sessionType\":\"1\",\"sessionCommand\":\"0\", \"params\":[\"0.6\"]}\n";
 	String message = "";
-	while(Serial.available() > 0 && !message.endsWith("\n") || message == ""){
-		message += Serial.readString();
+	long timer = millis();
+	if(Serial.available() > 0){
+		while(!message.endsWith("}\n")){
+			message += Serial.readString();
+		}
 	}
-	parseJsonMessage(message);			
+	if(message != "" && message.endsWith("}\n")){
+		parseJsonMessage(message);	
+	}
 }
 
 Session* SessionController::getSession(){
@@ -60,33 +68,29 @@ Session* SessionController::getSession(){
 }
 
 void SessionController::parseJsonMessage(String jsonMsg){
-	StaticJsonBuffer<200> jsonBuffer;
+	StaticJsonBuffer<500> jsonBuffer;
 	JsonObject& root = jsonBuffer.parseObject(jsonMsg);
 
 	if(!root.success()){
 		Serial.print("{\"status\":\"-2\"}\n");
 		return;
 	}
+
 	sessionType type = (sessionType)root["sessionType"].as<int>();
 	sessionCommand command = (sessionCommand)root["sessionCommand"].as<int>();
-	JsonObject& params = root["params"];
+	JsonArray& params = root["params"];
 
 	switch(command){
 		case START_COMMAND: startSession(type, params); break;
 		case PAUSE_COMMAND: pauseSession(); break;
 		case STOP_COMMAND: stopSession(); break;
-		default: Serial.print("{\"status\":\"-2\"}\n");break;
+		default: Serial.print("{\"status\":\"-4\"}\n");break;
 	}
 
 }
 
-String* SessionController::getParams(JsonObject& params){
-	String* paramArray;
-	JsonObject& data =  params;
-	int index = 0;
-	for (auto dataobj : data){
-		paramArray[index] = dataobj.key;
-		index++;
+void SessionController::getParams(float* paramArray, JsonArray& params){
+	for(int i = 0; i < params.size(); i++){
+		paramArray[i] = params.get<float>(i);
 	}
-	return paramArray;
 }

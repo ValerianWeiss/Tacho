@@ -16,9 +16,10 @@ class Session{
 		Session(unsigned int Id, unsigned long startTime);
 	
 	public:
-    double getDuration();	
+		virtual void printToMonitor() = 0;
 		virtual void calc() = 0;
 		virtual void sendDataJson() = 0;
+		double getDuration();
     bool getSessionState();
     void setSessionActive();
     void setSessionNotActive();

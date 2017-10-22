@@ -20,34 +20,39 @@ void handleRoot() {
   server.send(200, "text/html", "<h1>You are connected</h1>");
 }
 
-void sendJsonResponseToClient(){  
+bool sendJsonResponseToClient(){  
   String recievedStr = "";
   //Reading data from arduino
-  while(Serial.available() > 0 && !recievedStr.endsWith("\n") || recievedStr ==  ""){
-    recievedStr += Serial.readString();
+  while(!recievedStr.endsWith("}\n")){
+	recievedStr += Serial.readString();
   }
   //Send data from arduino to Client
   server.send(200, "application/json", recievedStr);  
+  return true;
 }
 
 void handleStartBikesession(){
   if(activeFlag != SESSION_ACTIVE){  
-    sendToArduino();
-    activeFlag = SESSION_ACTIVE;
+    if(sendToArduino()){
+     activeFlag = SESSION_ACTIVE; 
+    }
   }else{
-    server.send(404, "application/json", "{\"status\":\"-3\"}");
+    server.send(200, "application/json", "{\"status\":\"-3\"}");
   }
 }
 
-void sendToArduino(){
+bool sendToArduino(){
   if(server.hasArg("plain") != true){
-      server.send(404, "application/json", "{\"status\":\"-1\"}");
-      return;
-    }
-    Serial.print(server.arg("plain"));
-    Serial.print("\n");
-    //the response which is getting produced and send by to arduino
-    sendJsonResponseToClient();
+      server.send(200, "application/json", "{\"status\":\"-1\"}");
+      return false;
+  }
+  Serial.print(server.arg("plain"));
+  Serial.print("\n");
+  //the response which is getting produced and send by to arduino
+  if(!sendJsonResponseToClient()){
+      return false;
+  }
+  return true;
 }
 
 void handleStop(){
@@ -55,7 +60,7 @@ void handleStop(){
     sendToArduino();
     activeFlag = SESSION_NOT_ACTIVE;      
   }else{
-    server.send(404,"application/json", "{\"status\":\"-3\"}");
+    server.send(200,"application/json", "{\"status\":\"-3\"}");
   }  
 }
 

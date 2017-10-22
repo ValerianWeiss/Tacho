@@ -22,15 +22,16 @@ void loop(){
           sessionController->getSession()->sendDataJson();
           break;
       
-      default: //TODO implement a default case
+      default: //Not to be handeld -> you cant start a session with an
+               //invalid SessionId
           break;
     }
   }
- 
-  //Random spintimintervall
+  
+  //Debugging function -> just use if you want to see the data of the Session
+  //sessionController->getSession()->printToMonitor();
+  //Random spintimeintervall
   int i = random(20,1000);
-  //Serial.print((double)i/1000,4);
-  //Serial.print("\n");
   delay(i);
 }
 	
