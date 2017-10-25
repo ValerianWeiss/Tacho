@@ -11,7 +11,7 @@ const char *password = "test123";
 
 ESP8266WebServer server(80);
 int activeFlag = SESSION_NOT_ACTIVE;
-
+String message = "";
 
 /* Just a little test message.  Go to http://192.168.4.1 in a web browser
  * connected to this access point to see it.
@@ -20,14 +20,39 @@ void handleRoot() {
   server.send(200, "text/html", "<h1>You are connected</h1>");
 }
 
-bool sendJsonResponseToClient(){  
-  String recievedStr = "";
+String readFromSerial(){
+   String recievedStr = "";
   //Reading data from arduino
+  Serial.print("start reading from arduino");
   while(!recievedStr.endsWith("}\n")){
-	recievedStr += Serial.readString();
+	  recievedStr += Serial.readString();
   }
+  Serial.print("ESP recieved String: " + recievedStr);
+  return recievedStr;
+}
+
+bool sendJsonResponseToClient(String message = message){    
   //Send data from arduino to Client
-  server.send(200, "application/json", recievedStr);  
+  if(message == ""){
+    //invalid json message
+    server.send(200, "application/json", "{\"status\":\"-1\"}");
+    return false;
+  }
+  server.send(200, "application/json", message);  
+  return true;
+}
+
+bool sendToArduino(){
+  if(server.hasArg("plain") != true){
+      server.send(200, "application/json", "{\"status\":\"-1\"}");
+      return false;
+  }
+  Serial.print(server.arg("plain"));
+  Serial.print("\n");
+  //the response which is getting produced and send by to arduino
+  if(!sendJsonResponseToClient(readFromSerial())){
+      return false;
+  }
   return true;
 }
 
@@ -41,18 +66,8 @@ void handleStartBikesession(){
   }
 }
 
-bool sendToArduino(){
-  if(server.hasArg("plain") != true){
-      server.send(200, "application/json", "{\"status\":\"-1\"}");
-      return false;
-  }
-  Serial.print(server.arg("plain"));
-  Serial.print("\n");
-  //the response which is getting produced and send by to arduino
-  if(!sendJsonResponseToClient()){
-      return false;
-  }
-  return true;
+void handleGetData(){
+  sendJsonResponseToClient();
 }
 
 void handleStop(){
@@ -78,6 +93,7 @@ void setup() {
   server.on("/", handleRoot);
   server.on("/stop", handleStop);  
   server.on("/startBikeSession", handleStartBikesession);
+  server.on("/getData",  handleGetData);
   server.begin();
   //Serial.println("HTTP server started");
 }
@@ -85,7 +101,7 @@ void setup() {
 void loop() {
   server.handleClient();
   if(activeFlag == SESSION_ACTIVE){
-    sendJsonResponseToClient();
+    message = readFromSerial();
   }
 }
 
