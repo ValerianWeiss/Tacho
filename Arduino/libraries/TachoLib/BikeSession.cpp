@@ -23,6 +23,8 @@ BikeSession::BikeSession(unsigned int id, unsigned long startTime, float wheelHi
   this->averageSpeed = 0.0;
 }
 
+BikeSession::~BikeSession(){}
+
 void BikeSession::addDistance(){
 	this->distance += Pi*this->wheelHight;
 }
@@ -38,13 +40,7 @@ void BikeSession::calcSpeed(double timeForOneSpin){
 
 void BikeSession::calc(){
 	//Expected timeForOneSpin in milliseconds time unit
-	double timeForOneSpin = this->timer.calcDiff();
-
-	//For Testing
-	//Serial.print("timeForOneSpin: ");
-	//Serial.print(timeForOneSpin);
-	//Serial.print("\n");
-	
+	double timeForOneSpin = this->timer->calcDiff();
 	
   Session::addDuration(timeForOneSpin);
   if(timeForOneSpin > 0){
@@ -61,10 +57,6 @@ void BikeSession::sendDatagram(){
 void BikeSession::calcAvgSpeed(){
 	//Expected distance in unit "m" and totalTime in Seconds
 	this->averageSpeed = (this->distance/this->duration)*3.6;
-}
-
-Timer BikeSession::getTimer(){
-  return timer;
 }
 
 void BikeSession::startNewSession(){

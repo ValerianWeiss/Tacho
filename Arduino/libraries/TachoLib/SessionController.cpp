@@ -41,7 +41,7 @@ void SessionController::startSession(sessionType type, JsonArray& params){
 }	
 
 void SessionController::stopSession(){
-	this->session->setSessionNotActive();
+	delete this->session;
 }
 
 //To be implemented

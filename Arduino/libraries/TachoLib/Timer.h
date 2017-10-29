@@ -6,12 +6,12 @@ class Timer{
 		unsigned long prevMillis;
 		unsigned long prevEventMillis; //Last read from Timer (Last use of calc Diff)
 		int rollovers;
-		int overallRollovers;
-    
+		static int overallRollovers;
 	public:
-    Timer();		
+    	Timer();		
 		unsigned long checkForRollover();
 		double calcDiff();
+		~Timer();
 };
 
 #endif

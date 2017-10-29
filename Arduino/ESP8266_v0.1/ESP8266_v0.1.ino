@@ -48,12 +48,12 @@ bool sendToArduino(){
 }
 
 void handleStartBikesession(){
-  if(activeFlag != SESSION_ACTIVE){  
+  if(activeFlag == SESSION_NOT_ACTIVE){  
     if(sendToArduino()){
      activeFlag = SESSION_ACTIVE; 
     }
   }else{
-    server.send(200, "application/json", MSG_SESSION_NOT_ACTIVE);
+    server.send(200, "application/json", MSG_SESSION_ALREADY_ACTIVE);
   }
 }
 
@@ -66,7 +66,7 @@ void handleGetData(){
 }
 
 void handleStop(){
-  if(activeFlag != SESSION_NOT_ACTIVE){
+  if(activeFlag == SESSION_ACTIVE){
     if(sendToArduino()){
       activeFlag = SESSION_NOT_ACTIVE;
     }    

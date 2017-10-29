@@ -14,9 +14,11 @@ void setup(){
 void loop(){
   sessionController->listenToEsp();
 
-  if(sessionController->getSession()->getSessionState() == true){  
+  if(sessionController->getSession() != NULL
+        && sessionController->getSession()->getSessionState()){  
+          
     switch(sessionController->getSession()->getId()){
-      case BIKE_SESSION:          
+      case BIKE_SESSION:   
           sessionController->getSession()->getTimer().checkForRollover();
           sessionController->getSession()->calc();
           sessionController->getSession()->sendDataJson();

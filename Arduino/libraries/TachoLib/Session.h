@@ -10,7 +10,7 @@ class Session{
 		double duration;
 		unsigned long startTime;
 		unsigned long endTime;	
-    Timer timer;	
+    	Timer *timer;	
 		static bool active;
 		
 		Session(unsigned int Id, unsigned long startTime);
@@ -20,13 +20,13 @@ class Session{
 		virtual void calc() = 0;
 		virtual void sendDataJson() = 0;
 		double getDuration();
-    bool getSessionState();
-    void setSessionActive();
-    void setSessionNotActive();
-    int getId();
-    void addDuration(double timeForOneSpin);
-    Timer getTimer();
-		
+		bool getSessionState();
+		void setSessionActive();
+		void setSessionNotActive();
+		int getId();
+		void addDuration(double timeForOneSpin);
+		Timer getTimer();		
+		virtual ~Session();		
 };
 
 #endif

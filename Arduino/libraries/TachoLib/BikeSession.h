@@ -20,8 +20,7 @@ class BikeSession : public Session{
   	void calcAvgSpeed();
     void addDuration(double timeForOneSpin);    
     void sendDatagram();
-    
-	
+
   public: 
     float getTopSpeed();
     float getWheelHight();
@@ -35,6 +34,7 @@ class BikeSession : public Session{
     Timer getTimer();
 	  String print();
 	  static BikeSession* getInstance(float wheelHight);
+    virtual ~BikeSession();
 };
 
 #endif

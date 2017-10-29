@@ -3,6 +3,11 @@
 bool Session::active = false;
 
 Session::Session(unsigned int Id, unsigned long startTime) : sessionId (Id), startTime(startTime), duration(0.0){
+  this->timer = new Timer();
+}
+
+Session::~Session(){
+  delete timer;
 }
 
 bool Session::getSessionState(){
@@ -29,6 +34,6 @@ void Session::addDuration(double timeForOneSpin){
   this->duration += timeForOneSpin;
 }
 Timer Session::getTimer(){
-  return this->timer;
+  return *timer;
 }
 
