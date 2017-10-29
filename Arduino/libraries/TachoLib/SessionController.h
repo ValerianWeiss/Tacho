@@ -9,10 +9,12 @@
 class SessionController{
 	private:  	
     static SessionController *sessionController;
+    static String messageBuffer;
     
     SessionController();
-    void getParams(float* paramArray, JsonArray& params);
+    void getParamsFromJson(float* paramArray, JsonArray& params);
     void parseJsonMessage(String jsonMsg);
+    String getJsonMessage(String jsonMsg);
  
   protected:
      static Session *session;

@@ -1,4 +1,4 @@
-
+#include <GlobalFunctions.h>
 #include <Constants.h>
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h> 
@@ -10,49 +10,40 @@ const char *ssid = "ESP-ap";
 const char *password = "test123";
 
 ESP8266WebServer server(80);
-int activeFlag = SESSION_NOT_ACTIVE;
-String message = "";
+int activeFlag;
+String message;
+int handleTime;
 
 /* Just a little test message.  Go to http://192.168.4.1 in a web browser
  * connected to this access point to see it.
  */
 void handleRoot() {
-  server.send(200, "text/html", "<h1>You are connected</h1>");
+  server.send(200, "application/json", MSG_STATUS_OK);
 }
 
-String readFromSerial(){
-   String recievedStr = "";
-  //Reading data from arduino
-  Serial.print("start reading from arduino");
-  while(!recievedStr.endsWith("}\n")){
-	  recievedStr += Serial.readString();
-  }
-  Serial.print("ESP recieved String: " + recievedStr);
-  return recievedStr;
-}
-
-bool sendJsonResponseToClient(String message = message){    
+bool sendJsonResponseToClient(String msg = message){    
   //Send data from arduino to Client
-  if(message == ""){
+  String toSend = GlobalFunctions::getJsonMessage(msg);
+  if(toSend == ""){
     //invalid json message
-    server.send(200, "application/json", "{\"status\":\"-1\"}");
+    server.send(200, "application/json", MSG_NO_RESPONSE_FROM_ARDUINO);
     return false;
   }
-  server.send(200, "application/json", message);  
+  server.send(200, "application/json", toSend);
+  
+  //resetting message after sending it to the Client
+  message = "";
   return true;
 }
 
 bool sendToArduino(){
   if(server.hasArg("plain") != true){
-      server.send(200, "application/json", "{\"status\":\"-1\"}");
+      server.send(200, "application/json", MSG_NO_BODY_IN_REQUEST);
       return false;
   }
   Serial.print(server.arg("plain"));
-  Serial.print("\n");
-  //the response which is getting produced and send by to arduino
-  if(!sendJsonResponseToClient(readFromSerial())){
-      return false;
-  }
+
+  server.send(200, "application/json", MSG_STATUS_OK);
   return true;
 }
 
@@ -62,34 +53,38 @@ void handleStartBikesession(){
      activeFlag = SESSION_ACTIVE; 
     }
   }else{
-    server.send(200, "application/json", "{\"status\":\"-3\"}");
+    server.send(200, "application/json", MSG_SESSION_NOT_ACTIVE);
   }
 }
 
 void handleGetData(){
-  sendJsonResponseToClient();
+  if(activeFlag == SESSION_ACTIVE){
+    sendJsonResponseToClient();
+  }else{
+    server.send(200, "application/json", MSG_SESSION_NOT_ACTIVE);
+  }
 }
 
 void handleStop(){
   if(activeFlag != SESSION_NOT_ACTIVE){
-    sendToArduino();
-    activeFlag = SESSION_NOT_ACTIVE;      
+    if(sendToArduino()){
+      activeFlag = SESSION_NOT_ACTIVE;
+    }    
   }else{
-    server.send(200,"application/json", "{\"status\":\"-3\"}");
+    server.send(200,"application/json", MSG_SESSION_NOT_ACTIVE);
   }  
 }
 
 void setup() {
   delay(1000);
-  Serial.begin(115200);
-  //Serial.println();
-  //Serial.print("Configuring access point...");
+  activeFlag = SESSION_NOT_ACTIVE;
+  message = "";
+  handleTime = 200;
+  Serial.begin(BAUD_RATE);
   
   /* You can remove the password parameter if you want the AP to be open. */
   IPAddress myIP = WiFi.softAP(ssid, password);
   
-  //Serial.print("AP IP address: ");
-  //Serial.println(myIP);
   server.on("/", handleRoot);
   server.on("/stop", handleStop);  
   server.on("/startBikeSession", handleStartBikesession);
@@ -99,9 +94,19 @@ void setup() {
 }
 
 void loop() {
-  server.handleClient();
+  unsigned long timer = millis();
+  while(millis() - timer <= handleTime){
+    server.handleClient();
+  }
   if(activeFlag == SESSION_ACTIVE){
-    message = readFromSerial();
+    //If there is Json message in the buffer which is not getting 
+    //handeled, the buffer string is getting resetted
+    if(GlobalFunctions::getJsonMessage(message) != ""){
+      message = "";
+    }    
+    //Fuction is used to read the newest data message from the arduino
+    //This function is reading for max 100ms
+    GlobalFunctions::readJsonFromSerial(&message);
   }
 }
 

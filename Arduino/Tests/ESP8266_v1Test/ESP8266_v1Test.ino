@@ -26,16 +26,10 @@ void sendJson(){
   {
     recievedStr = Serial.readString();
   }
-  server.send(200, "application/json", recievedStr);
-  }  
+  server.send(200, "application/json", recievedStr);  
 }
 
-void handleStartBikesession(){
-  activeFlag = SESSION_ACTIVE;
-  int messageArray[2];
-  messageArray[0] = activeFlag;
-  messageArray[1] = SessionType.BIKE_SESSION;
-  Serial.write(messageArray,2);
+void handleStartBikesession(){;
 }
 
 void handleStop(){
@@ -62,7 +56,7 @@ void setup() {
 
 void loop() {
 	server.handleClient();
-  if(activeFlag == SESSION_ACTIVE && Serial.readString().equals(ARDUINO_STARTS_SENDING)){
+  if(activeFlag == SESSION_ACTIVE){
     sendJson();
   }
 }
