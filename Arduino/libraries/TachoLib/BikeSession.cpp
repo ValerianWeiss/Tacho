@@ -25,7 +25,12 @@ BikeSession::BikeSession(unsigned int id, float wheelHight) : Session(id)
   this->averageSpeed = 0.0;
 }
 
-BikeSession::~BikeSession() {}
+BikeSession::~BikeSession()
+{
+	//deleteing the static membervariable
+	delete this->bikeSession;
+	this->bikeSession = NULL;
+}
 
 void BikeSession::addDistance()
 {

@@ -2,7 +2,7 @@
 
 bool Session::active = false;
 
-Session::Session(unsigned int Id) : sessionId(Id), startTime(millis()), duration(0.0)
+Session::Session(unsigned int Id) : sessionId(Id), duration(0.0)
 {
   this->timer = new Timer();
 }
@@ -41,7 +41,8 @@ void Session::addDuration(double timeForOneSpin)
 {
   this->duration += timeForOneSpin;
 }
-Timer *Session::getTimer()
+
+Timer* Session::getTimer()
 {
   return timer;
 }

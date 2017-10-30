@@ -8,7 +8,7 @@ Timer::~Timer() {}
 
 int Timer::overallRollovers = 0;
 
-unsigned long Timer::checkForRollover()
+void Timer::checkForRollover()
 {
 	if (this->prevMillis > millis())
 	{

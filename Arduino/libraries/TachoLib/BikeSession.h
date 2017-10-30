@@ -13,7 +13,7 @@ private:
   float topSpeed;
   float averageSpeed;
   static BikeSession *bikeSession;
-  BikeSession(unsigned int id, unsigned long startTime, float wheelHight);
+  BikeSession(unsigned int id, float wheelHight);
 
 protected:
   void addDistance();
@@ -30,7 +30,6 @@ public:
   void calc();
   void printToMonitor();
   void sendDataJson();
-  Timer getTimer();
   String print();
   static BikeSession *getInstance(float wheelHight);
   virtual ~BikeSession();

@@ -113,7 +113,7 @@ void SessionController::parseJsonMessage(String jsonMsg)
 
 void SessionController::getParamsFromJson(float *paramArray, JsonArray &params)
 {
-	for (int i = 0; i < params.size(); i++)
+	for (unsigned int i = 0; i < params.size(); i++)
 	{
 		paramArray[i] = params.get<float>(i);
 	}
