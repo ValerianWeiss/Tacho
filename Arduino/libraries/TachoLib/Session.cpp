@@ -2,38 +2,46 @@
 
 bool Session::active = false;
 
-Session::Session(unsigned int Id, unsigned long startTime) : sessionId (Id), startTime(startTime), duration(0.0){
+Session::Session(unsigned int Id) : sessionId(Id), startTime(millis()), duration(0.0)
+{
   this->timer = new Timer();
 }
 
-Session::~Session(){
+Session::~Session()
+{
   delete timer;
 }
 
-bool Session::getSessionState(){
-	return this->active;
+bool Session::getSessionState()
+{
+  return this->active;
 }
 
-void Session::setSessionActive(){
-	this->active = true;
+void Session::setSessionActive()
+{
+  this->active = true;
 }
 
-void Session::setSessionNotActive(){
-	this->active = false;
+void Session::setSessionNotActive()
+{
+  this->active = false;
 }
 
-double Session::getDuration(){
+double Session::getDuration()
+{
   return this->duration;
 }
 
-int Session::getId(){
+int Session::getId()
+{
   return this->sessionId;
 }
 
-void Session::addDuration(double timeForOneSpin){
+void Session::addDuration(double timeForOneSpin)
+{
   this->duration += timeForOneSpin;
 }
-Timer Session::getTimer(){
-  return *timer;
+Timer *Session::getTimer()
+{
+  return timer;
 }
-

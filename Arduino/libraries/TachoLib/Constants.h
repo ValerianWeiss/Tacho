@@ -16,13 +16,15 @@
 
 #define READING_TIME 100
 
-enum sessionCommand{
+enum sessionCommand
+{
   START_COMMAND,
   STOP_COMMAND,
   PAUSE_COMMAND
 };
 
-enum sessionType{
+enum sessionType
+{
   SESSION,
   BIKE_SESSION,
 };

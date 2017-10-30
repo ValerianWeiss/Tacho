@@ -2,7 +2,7 @@
 #define TIMER_H
 
 class Timer{
-	
+	private:
 		unsigned long prevMillis;
 		unsigned long prevEventMillis; //Last read from Timer (Last use of calc Diff)
 		int rollovers;

@@ -16,10 +16,9 @@ void loop(){
 
   if(sessionController->getSession() != NULL
         && sessionController->getSession()->getSessionState()){  
-          
+    sessionController->getSession()->getTimer()->checkForRollover();      
     switch(sessionController->getSession()->getId()){
-      case BIKE_SESSION:   
-          sessionController->getSession()->getTimer().checkForRollover();
+      case BIKE_SESSION:             
           sessionController->getSession()->calc();
           sessionController->getSession()->sendDataJson();
           break;
