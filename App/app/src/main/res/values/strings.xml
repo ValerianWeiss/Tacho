@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">IoT_Tacho_v0.1</string>
+    <string name="HelloWorld">Hello World!</string>
+    <string name="WiFiList">Connect to WiFi</string>
+    <string name="Placeholder">Placeholder String!</string>
+
+    <string name="WiFiImage">This is a WiFi image</string>
+    <string name="WiFiName">This is the WiFi name</string>
+</resources>
